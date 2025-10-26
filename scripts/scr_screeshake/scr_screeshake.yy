@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_screeshake",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_screeshake",
+  "parent":{
+    "name":"scripts",
+    "path":"folders/efeitos/scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

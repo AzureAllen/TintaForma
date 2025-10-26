@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_branco",
+  "name":"sh_branco",
+  "parent":{
+    "name":"shaders",
+    "path":"folders/efeitos/shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
