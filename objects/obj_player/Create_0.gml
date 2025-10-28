@@ -1,5 +1,8 @@
-#region variaveis
+//inicia efeitos
+start_stretch();
 
+
+#region variaveis
 
 velh       = 0;
 velv       = 0;
@@ -7,6 +10,7 @@ max_velh    = 2;
 max_velv    = 7;
 my_gravity  = 0.4;
 
+dir = 1;
 
 is_grounded = false;
 
@@ -15,9 +19,14 @@ right   = false;
 left    = false;
 jump    = false;
 tab     = false;
+dive    = false;
 
 //estado
 state = noone;
+
+//colisoes array
+var _tiles = layer_tilemap_get_id("TS_wall");
+colision = [obj_wall, _tiles];
 
 #endregion
 #region metodos
@@ -26,13 +35,14 @@ input_set = function()
     right   = keyboard_check(ord("D"));
     left    = keyboard_check(ord("A"));
     jump    = keyboard_check_pressed(vk_space);
-    tab     = keyboard_check_pressed(vk_tab)
+    tab     = keyboard_check_pressed(vk_tab);
+    dive    = keyboard_check_pressed(ord("S"));
 }
 
 change_scale = function()
 {
-    if (velh < 0) image_xscale = -1;
-    if (velh > 0) image_xscale = 1;
+    if (velh != 0) dir = sign(velh);
+
 }
 
 move_player = function()
@@ -55,10 +65,10 @@ move_player = function()
 
 x_colision = function()
 {
-    if place_meeting(x + velh, y, obj_wall)
+    if place_meeting(x + velh, y, colision)
     {   
         var _velh = sign(velh);
-        while(!place_meeting(x + _velh, y, obj_wall))
+        while(!place_meeting(x + _velh, y, colision))
             {
                 x += _velh;    
             }
@@ -67,10 +77,10 @@ x_colision = function()
 }
 y_colision = function()
 {
-    if (place_meeting(x , y - velv, obj_wall))
+    if (place_meeting(x , y - velv, colision))
     {   
         var _velv = sign(velv);
-        while(!place_meeting(x , y - _velv, obj_wall))
+        while(!place_meeting(x , y - _velv, colision))
             {
                 y -= _velv;    
             }
@@ -80,7 +90,7 @@ y_colision = function()
 
 check_ground = function()
 {
-    if place_meeting(x , y + 1, obj_wall)
+    if place_meeting(x , y + 1, colision)
     {
         is_grounded = true;    
     }else 
@@ -98,10 +108,20 @@ idle_state = function()
     
     if (right) != (left)
     {
-        state = running_state;    
+        state = running_state;
+        stretch_effect(0.9, 1.1);    
     }
     
-    if (jump) state = jumping_state; 
+    if (jump)
+    {
+        state = jumping_state;
+        stretch_effect(0.8, 1.5); 
+    }
+    
+    if (dive) && (is_grounded)
+    {
+        state = start_dive;
+    } 
     
 }
 running_state = function()
@@ -109,17 +129,31 @@ running_state = function()
     move_player();
     change_sprite(spr_running)
     if (velh == 0) state = idle_state;
+        
+    if (dive) && (is_grounded)
+    {
+        state = start_dive;
+    } 
 }
 jumping_state = function()
 {
     move_player();
     change_sprite(spr_idle_1);
     //if velv > 0 sprite = subindo if velv < 0 sprite = descendo
+    if (velv > 0) 
+    {
+        change_sprite(spr_jump_start);    
+    }else{
+        change_sprite(spr_jump_end);
+    }
     
-    if (is_grounded) state = idle_state;
-
+    
+    if (is_grounded) 
+    {
+        state = idle_state;
+        stretch_effect(1.5, 0.8); 
+    }
 }
-
 end_animation = function()
 {
     var _spd = sprite_get_speed(sprite_index) / FPS;
@@ -158,7 +192,35 @@ power_up_state_end = function()
 
 start_dive = function()
 {
+    check_ground();
     change_sprite(spr_start_dive);
+    
+    if (end_animation())
+    {
+        state = underground_state;
+    } 
+
+}
+
+underground_state = function()
+{
+    change_sprite(spr_underground);
+    check_ground();
+    
+    velh = (right - left) * max_velh;
+    
+    var _stop = !place_meeting(x + sprite_width/2 * dir + velh, y + 1, colision)
+    if (_stop)
+    {
+        velh = 0;
+    }
+    
+    x += round(velh);
+    
+    if (dive) && (is_grounded)
+    {
+        state = end_dive;
+    }
 }
 
 end_dive = function()
