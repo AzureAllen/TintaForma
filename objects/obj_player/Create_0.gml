@@ -51,6 +51,7 @@ move_player = function()
     check_ground();
     
     velh = (right - left) * max_velh;
+    velv = clamp(velv, -max_velv, max_velv);
     //chechando colisão em y
     y_colision();
     //criar gravidade
@@ -112,11 +113,13 @@ idle_state = function()
         stretch_effect(0.9, 1.1);    
     }
     
-    if (jump)
+    
+    if (jump) && (is_grounded)
     {
         state = jumping_state;
         stretch_effect(0.8, 1.5); 
     }
+    
     
     if (dive) && (is_grounded)
     {
@@ -209,11 +212,13 @@ underground_state = function()
     
     velh = (right - left) * max_velh;
     
-    var _stop = !place_meeting(x + sprite_width/2 * dir + velh, y + 1, colision)
+    var _stop = !place_meeting(x + sprite_width/2 * dir + velh, y + 1 , colision)
     if (_stop)
     {
         velh = 0;
     }
+    
+    x_colision();
     
     x += round(velh);
     
