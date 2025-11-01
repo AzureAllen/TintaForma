@@ -13,6 +13,10 @@ my_gravity  = 0.4;
 dir = 1;
 
 is_grounded = false;
+//powerup
+power_dive = false;
+
+keys = 0;
 
 //input
 right   = false;
@@ -51,17 +55,19 @@ move_player = function()
     check_ground();
     
     velh = (right - left) * max_velh;
-    velv = clamp(velv, -max_velv, max_velv);
+    velv = clamp(velv, -max_velv, max_velv); // limitando a velocidade vertical
     //chechando colisão em y
     y_colision();
     //criar gravidade
     set_gravity();
-    
-    y -= round(velv);
     //checando colisão em x
     x_colision();
     
-    x += round(velh);
+    y -= ceil(velv);
+    
+    x += ceil(velh);
+    
+    unlock_door();
 }    
 
 x_colision = function()
@@ -103,6 +109,7 @@ check_ground = function()
 //estados do player
 idle_state = function()
 {
+    
     move_player();
     change_sprite(spr_idle_1);
     image_blend = -1;
@@ -121,7 +128,7 @@ idle_state = function()
     }
     
     
-    if (dive) && (is_grounded)
+    if (dive) && (is_grounded) && (power_dive)
     {
         state = start_dive;
     } 
@@ -131,9 +138,11 @@ running_state = function()
 {
     move_player();
     change_sprite(spr_running)
-    if (velh == 0) state = idle_state;
-        
-    if (dive) && (is_grounded)
+    if (velh == 0)
+    {
+         state = idle_state;
+    }   
+    if (dive) && (is_grounded) && (power_dive)
     {
         state = start_dive;
     } 
@@ -141,23 +150,37 @@ running_state = function()
 jumping_state = function()
 {
     move_player();
-    change_sprite(spr_idle_1);
+    //change_sprite(spr_idle_1);
     //if velv > 0 sprite = subindo if velv < 0 sprite = descendo
     if (velv > 0) 
     {
-        change_sprite(spr_jump_start);    
-    }else{
-        change_sprite(spr_jump_end);
+        change_sprite(spr_jump_start);
+        
+        if (array_contains(colision, obj_wall_one_way))
+        {
+            var _pos = array_get_index(colision, obj_wall_one_way)
+            array_delete(colision, _pos, 1);
+        }
+            
     }
-    
-    
+    if (velv < 0)
+    {
+        change_sprite(spr_jump_end);
+        if (!place_meeting(x , y, obj_wall_one_way))
+        {
+            if (!array_contains(colision, obj_wall_one_way))
+            array_push(colision, obj_wall_one_way);
+        }
+    }
     if (is_grounded) 
     {
         state = idle_state;
-        stretch_effect(1.5, 0.8); 
+        stretch_effect(1.5, 0.8);
+        
     }
 }
-end_animation = function()
+
+end_animation = function() //dar atenção e estudar melhor
 {
     var _spd = sprite_get_speed(sprite_index) / FPS;
     if (image_index + _spd >= image_number)
@@ -166,10 +189,16 @@ end_animation = function()
     }
 }
 
+power_up_pick_up = function()
+{
+    
+    state = power_up_state_start;
+}
 
 power_up_state_start = function()
 {
-    change_sprite(spr_idle_1)
+    
+    change_sprite(spr_power_up);
     
     if (end_animation())
     {
@@ -180,7 +209,7 @@ power_up_state_middle = function()
 {
     change_sprite(spr_idle_1)
     
-    if (end_animation())
+    if (!instance_exists(obj_part_power_up))
     {
         state = power_up_state_end;
     }
@@ -204,11 +233,11 @@ start_dive = function()
     } 
 
 }
-
 underground_state = function()
 {
     change_sprite(spr_underground);
     check_ground();
+    mask_index = spr_underground;
     
     velh = (right - left) * max_velh;
     
@@ -216,6 +245,7 @@ underground_state = function()
     if (_stop)
     {
         velh = 0;
+        velv = 0;
     }
     
     x_colision();
@@ -227,10 +257,10 @@ underground_state = function()
         state = end_dive;
     }
 }
-
 end_dive = function()
 {
     change_sprite(spr_end_dive);
+    mask_index = spr_idle_1;
     
     if (end_animation())
         {
@@ -259,7 +289,7 @@ set_gravity = function()
     } 
 }
 
-change_sprite = function(_sprite)
+change_sprite = function(_sprite) // dar atenção e entender melhor
 {
     if (sprite_index != _sprite)
     {
@@ -268,7 +298,27 @@ change_sprite = function(_sprite)
     }
 }
 
+pick_key = function()
+{
+    keys++;
+}
 
+unlock_door = function()
+{
+    //checando qual porta estou colidindo, para não destruir todas as instancias desta porta
+    var _door = instance_place(x + velh, y, obj_door)
+    //se houve colisão com a porta
+    if (_door){
+        //checando se tenho chaves
+        if (keys > 0) && (_door.state_door == 0)
+        {
+            _door.state_door = 1;
+            keys--;
+        }
+    }
+
+    
+}
 
 #endregion
 
@@ -287,9 +337,11 @@ set_debug = function()
     
     dbg_watch(ref_create(id, "velv"), "velv");
     dbg_watch(ref_create(id, "y"), "y");
+    dbg_watch(ref_create(id, nameof(colision)), nameof(colision));
     
     dbg_slider(ref_create(id, "max_velv"), 0, 10, "max_velv", 0.1);
     dbg_slider(ref_create(id, "my_gravity"), 0, 1, "my_gravity", 0.01);
+    
 }
 
 ativa_debug = function()
@@ -303,6 +355,7 @@ ativa_debug = function()
         if (global.debug)
         {
             set_debug();
+            
         }else
         {
             show_debug_overlay(0);
@@ -318,3 +371,4 @@ ativa_debug = function()
 #endregion
 
 state = idle_state;
+

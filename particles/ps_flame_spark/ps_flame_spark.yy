@@ -1,0 +1,26 @@
+{
+  "$GMParticleSystem":"",
+  "%Name":"ps_flame_spark",
+  "backdropHeight":16,
+  "backdropImageOpacity":0.5,
+  "backdropImagePath":"G:\\game maker\\my games\\TintaForma\\sprites\\spr_torch\\0b5ce600-bdb5-498b-864b-560f02416c36.png",
+  "backdropWidth":16,
+  "backdropXOffset":0.0,
+  "backdropYOffset":0.0,
+  "drawOrder":0,
+  "emitters":[
+    {"$GMPSEmitter":"","%Name":"GM_Smoke","additiveBlend":true,"directionIncrease":0.0,"directionMax":100.0,"directionMin":80.0,"directionWiggle":0.0,"distribution":0,"editorColour":16777215,"editorDrawShape":true,"emitCount":1,"emitDelayMax":0.0,"emitDelayMin":0.0,"emitDelayUnits":1,"emitIntervalMax":0.0,"emitIntervalMin":0.0,"emitIntervalUnits":0,"enabled":true,"endColour":1493172224,"GMPresetName":"","gravityDirection":270.0,"gravityForce":0.0,"headPosition":0.0,"lifetimeMax":20.0,"lifetimeMin":10.0,"linkedEmitter":null,"locked":false,"midColour":3422552064,"mode":0,"name":"GM_Smoke","orientationIncrease":0.0,"orientationMax":0.0,"orientationMin":0.0,"orientationRelative":false,"orientationWiggle":0.0,"regionH":4.0111046,"regionW":7.7995434,"regionX":0.0,"regionY":-1.0,"resourceType":"GMPSEmitter","resourceVersion":"2.0","scaleX":0.1,"scaleY":0.1,"shape":0,"sizeIncrease":0.01,"sizeMax":0.5,"sizeMin":0.1,"sizeWiggle":0.0,"spawnOnDeathCount":0,"spawnOnDeathGMPreset":null,"spawnOnDeathId":null,"spawnOnUpdateCount":0,"spawnOnUpdateGMPreset":null,"spawnOnUpdateId":null,"speedIncrease":0.05,"speedMax":0.0,"speedMin":0.0,"speedWiggle":0.0,"spriteAnimate":false,"spriteId":null,"spriteRandom":false,"spriteStretch":true,"startColour":3628813150,"texture":12,},
+    {"$GMPSEmitter":"","%Name":"meu_foguin","additiveBlend":true,"directionIncrease":0.05,"directionMax":92.0,"directionMin":58.0,"directionWiggle":20.0,"distribution":0,"editorColour":16777215,"editorDrawShape":true,"emitCount":1,"emitDelayMax":0.0,"emitDelayMin":0.0,"emitDelayUnits":1,"emitIntervalMax":2.0,"emitIntervalMin":1.0,"emitIntervalUnits":0,"enabled":true,"endColour":2231369983,"GMPresetName":null,"gravityDirection":270.0,"gravityForce":0.0,"headPosition":0.0,"lifetimeMax":120.0,"lifetimeMin":60.0,"linkedEmitter":{"name":"meu_foguin","path":"particlelib/meu_foguin/meu_foguin.yy",},"locked":false,"midColour":4279536127,"mode":0,"name":"meu_foguin","orientationIncrease":0.0,"orientationMax":0.0,"orientationMin":0.0,"orientationRelative":false,"orientationWiggle":0.0,"regionH":5.928814,"regionW":7.7478657,"regionX":0.0,"regionY":-2.0,"resourceType":"GMPSEmitter","resourceVersion":"2.0","scaleX":0.05,"scaleY":0.08,"shape":0,"sizeIncrease":0.01,"sizeMax":0.5,"sizeMin":0.1,"sizeWiggle":0.0,"spawnOnDeathCount":1,"spawnOnDeathGMPreset":null,"spawnOnDeathId":null,"spawnOnUpdateCount":1,"spawnOnUpdateGMPreset":null,"spawnOnUpdateId":null,"speedIncrease":0.01,"speedMax":0.0,"speedMin":0.0,"speedWiggle":0.0,"spriteAnimate":false,"spriteId":null,"spriteRandom":false,"spriteStretch":true,"startColour":4283880191,"texture":7,},
+  ],
+  "name":"ps_flame_spark",
+  "parent":{
+    "name":"Particle Systems",
+    "path":"folders/Particle Systems.yy",
+  },
+  "resourceType":"GMParticleSystem",
+  "resourceVersion":"2.0",
+  "showBackdrop":true,
+  "showBackdropImage":true,
+  "xorigin":0,
+  "yorigin":0,
+}

@@ -10,8 +10,8 @@
     "path":"folders/Objects/level.yy",
   },
   "parentObjectId":{
-    "name":"obj_wall",
-    "path":"objects/obj_wall/obj_wall.yy",
+    "name":"obj_wall_one_way",
+    "path":"objects/obj_wall_one_way/obj_wall_one_way.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
